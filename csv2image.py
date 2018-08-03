@@ -3,7 +3,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-def pandas2image(axes, value, df):
+def pandas2image(axes, value,df, limiters=None):
+
+    if limiters != None:
+        df = df.loc[df[limiters[0]] == limiters[1]]
+    else:
+        pass
+
     if len(axes) == 2:
         xaxis_name = axes[0]
         yaxis_name = axes[1]
@@ -38,7 +44,7 @@ def pandas2image(axes, value, df):
 
 if __name__ == "__main__":
     data = pd.read_csv("results.csv")
-    tommysucks = pandas2image(("stack", "starting_bet"),"net", data)
+    tommysucks = pandas2image(("stack", "starting_bet"),"net",limiters=("num_simulations", 100), df=data)
     plt.imshow(tommysucks['data'],interpolation="none", extent=[np.min(tommysucks['xaxis']), np.max(tommysucks['xaxis']), np.min(tommysucks['yaxis']), np.max(tommysucks['yaxis'])], aspect='auto')
     plt.xlabel(tommysucks['x_name'])
     plt.ylabel(tommysucks['y_name'])
