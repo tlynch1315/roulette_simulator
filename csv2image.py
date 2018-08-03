@@ -11,6 +11,7 @@ def pandas2image(axes, value, df):
         yaxis = df[yaxis_name].unique()
 
         pixel_array = np.zeros([len(xaxis), len(yaxis)])
+
         #print np.shape(pixel_array)
         df = df.set_index([xaxis_name, yaxis_name])
         #print df
@@ -18,23 +19,31 @@ def pandas2image(axes, value, df):
             for i2, y in enumerate(yaxis):
                 try:
                     val = df.loc[x,y][value]
-                    pixel_array[i1][i2] = val
-
-
-
+                    try:
+                        pixel_array[i1][i2] = val
+                    except ValueError:
+                        pixel_array[i1][i2] = val.mean()
                 except KeyError:
                     val = np.nan
                     pixel_array[i1][i2] = val
 
-        return pixel_array, xaxis, yaxis
+        return {"data" : pixel_array,
+                "xaxis": xaxis,
+                "yaxis": yaxis,
+                "x_name": xaxis_name,
+                "y_name": yaxis_name}
     elif len(axes) == 3:
         print "not ready yet"
 
 
 if __name__ == "__main__":
     data = pd.read_csv("results.csv")
-    tommysucks = pandas2image(("stack", "starting_bet", "num_simulations"),"net", data)
-    plt.imshow(tommysucks[0], cmap='hot')
+    tommysucks = pandas2image(("stack", "starting_bet"),"net", data)
+    plt.imshow(tommysucks['data'],interpolation="none", extent=[np.min(tommysucks['xaxis']), np.max(tommysucks['xaxis']), np.min(tommysucks['yaxis']), np.max(tommysucks['yaxis'])], aspect='auto')
+    plt.xlabel(tommysucks['x_name'])
+    plt.ylabel(tommysucks['y_name'])
+
+    plt.colorbar()
     #plt.axis([tommysucks[1][0], tommysucks[1][-1], tommysucks[2][0], tommysucks[2][-1]])
 
     plt.show()

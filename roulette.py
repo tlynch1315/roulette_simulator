@@ -57,6 +57,7 @@ if __name__ == "__main__":
 
     # if arguments not provided on command line request them
     args = parser.parse_args()
+    
     if len(sys.argv) < 5:
         stack, starting_bet, goal, num_simulations = get_arguments()
     else:
