@@ -144,11 +144,11 @@ if __name__ == "__main__":
     parser.add_argument('-a', '--starting_amount', type=float)
     parser.add_argument('-g', '--goal', type=float)
     parser.add_argument('-n', '--num_simulations', type=int)
-    parser.add_argument('-ws', '--num_wins', type=int, default=3)
+    parser.add_argument('-ws', '--num_wins', type=int)
 
     # if arguments not provided on command line request them
     args = parser.parse_args()
-
+    num_wins = 0
     if len(sys.argv) < 5:
         stack, starting_bet, goal, num_simulations, strategy = get_arguments()
     else:
@@ -159,7 +159,7 @@ if __name__ == "__main__":
         strategy = args.strategy
         num_wins = args.num_wins
 
-    if strategy == 'paroli':
+    if strategy == 'paroli' and num_wins == 0:
         num_wins = int(raw_input("How many wins before cashing out: \t "))
 
     wins = 0
