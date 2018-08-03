@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 def pandas2image(axes, value, df):
     if len(axes) == 2:
@@ -32,8 +33,9 @@ def pandas2image(axes, value, df):
 
 if __name__ == "__main__":
     data = pd.read_csv("results.csv")
-    tommysucks = pandas2image(("stack", "starting_bet"),"net", data)
+    tommysucks = pandas2image(("stack", "starting_bet", "num_simulations"),"net", data)
     plt.imshow(tommysucks[0], cmap='hot')
     #plt.axis([tommysucks[1][0], tommysucks[1][-1], tommysucks[2][0], tommysucks[2][-1]])
+
     plt.show()
     #print data["net"].values
