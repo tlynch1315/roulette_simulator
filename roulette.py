@@ -1,18 +1,19 @@
 import random
-import os
-
+import argparse
+import sys
 
 #print "Please enter a starting amount: $",
 def get_arguments():
+    strategy = raw_input("Please enter a strategy: \t")
     stack = float(raw_input("Please enter a starting amount: \t$"))
     starting_bet = float(raw_input("Please enter a starting bet: \t\t$"))
     goal = float(raw_input("Please enter a winnings goal: \t\t$"))
     num_simulations = int(raw_input("Please enter number of simulations:  "))
-    return stack, starting_bet, goal, num_simulations
+    return stack, starting_bet, goal, num_simulations, strategy
 
 
 
-def play_game(stack, starting_bet, goal):
+def play_martingale(stack, starting_bet, goal):
     '''
 
     :param stack: starting money stack
@@ -46,10 +47,26 @@ def play_game(stack, starting_bet, goal):
 
 
 if __name__ == "__main__":
+    # get arguments from command line
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-s', '--strategy', type=str)
+    parser.add_argument('-sb', '--starting_bet', type=float)
+    parser.add_argument('-a', '--starting_amount', type=float)
+    parser.add_argument('-g', '--goal', type=float)
+    parser.add_argument('-n', '--num_simulations', type=int)
 
-    #print 4 % 2
-    # get numbers required from user
-    stack, starting_bet, goal, num_simulations = get_arguments()
+    # if arguments not provided on command line request them
+    args = parser.parse_args()
+    if len(sys.argv) < 5:
+        stack, starting_bet, goal, num_simulations = get_arguments()
+    else:
+        stack = args.starting_amount
+        starting_bet = args.starting_bet
+        goal = args.goal
+        num_simulations = args.num_simulations
+        strategy = args.strategy
+
+
     wins = 0
     losses = 0
     net = 0
@@ -57,7 +74,7 @@ if __name__ == "__main__":
     losings = 0
     # play game by game
     for num in range(num_simulations):
-        result = play_game(stack, starting_bet, goal)
+        result = play_martingale(stack, starting_bet, goal)
         if result == goal:
             net += goal
             winnings += goal
@@ -77,7 +94,7 @@ if __name__ == "__main__":
     print "Net winnings: \t\t${0:.2f}".format(net)
 
     with open('results.csv', 'a') as f:
-        f.write('{},{},{},{},{} \n'.format(stack, starting_bet, goal, num_simulations, net))
+        f.write('{},{},{},{},{}\n'.format(stack, starting_bet, goal, num_simulations, net))
 
     f.close()
 
