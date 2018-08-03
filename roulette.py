@@ -137,8 +137,6 @@ def play_alembert(stack, starting_bet, goal):
 
 
 if __name__ == "__main__":
-
-    print F(5)
     # get arguments from command line
     parser = argparse.ArgumentParser()
     parser.add_argument('-s', '--strategy', type=str)
@@ -196,19 +194,20 @@ if __name__ == "__main__":
     print "Profit: \t\t\t${0:.2f}".format(winnings)
     print "Losses: \t\t\t${0:.2f}".format(losings)
     print "Net winnings: \t\t${0:.2f}".format(net)
+    average_winnings = net/num_simulations
 
     if strategy == 'martingale':
         with open('martingale.csv', 'a') as f:
-            f.write('{},{},{},{},{}\n'.format(stack, starting_bet, goal, num_simulations, net))
+            f.write('{},{},{},{},{}, {}\n'.format(stack, starting_bet, goal, num_simulations, net, average_winnings))
     elif strategy == 'fibonacci':
         with open('fibonacci.csv', 'a') as f:
-            f.write('{},1,{},{},{}\n'.format(stack, goal, num_simulations, net))
+            f.write('{},1,{},{},{},{}\n'.format(stack, goal, num_simulations, net, average_winnings))
     elif strategy == 'paroli':
         with open('paroli.csv', 'a') as f:
-            f.write('{},{},{},{},{},{}\n'.format(stack, starting_bet, goal, num_simulations, net, num_wins))
+            f.write('{},{},{},{},{},{},{}\n'.format(stack, starting_bet, goal, num_simulations, net, num_wins, average_winnings))
     elif strategy == 'alembert':
         with open('alembert.csv', 'a') as f:
-            f.write('{},{},{},{},{}\n'.format(stack, starting_bet, goal, num_simulations, net))
+            f.write('{},{},{},{},{},{}\n'.format(stack, starting_bet, goal, num_simulations, net, average_winnings))
 
 
     f.close()
