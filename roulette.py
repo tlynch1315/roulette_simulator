@@ -59,7 +59,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     if len(sys.argv) < 5:
-        stack, starting_bet, goal, num_simulations = get_arguments()
+        stack, starting_bet, goal, num_simulations, strategy = get_arguments()
     else:
         stack = args.starting_amount
         starting_bet = args.starting_bet
