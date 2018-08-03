@@ -94,7 +94,7 @@ if __name__ == "__main__":
     print "Net winnings: \t\t${0:.2f}".format(net)
 
     with open('results.csv', 'a') as f:
-        f.write('{},{},{},{},{}'.format(stack, starting_bet, goal, num_simulations, net))
+        f.write('{},{},{},{},{}\n'.format(stack, starting_bet, goal, num_simulations, net))
 
     f.close()
 
