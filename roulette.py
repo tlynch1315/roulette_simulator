@@ -144,6 +144,8 @@ def play_alembert(stack, starting_bet, goal):
         return start - stack, turns
 
 
+
+
 if __name__ == "__main__":
     # get arguments from command line
     parser = argparse.ArgumentParser()
