@@ -20,13 +20,15 @@ def play_martingale(stack, starting_bet, goal):
     :param stack: starting money stack
     :param starting_bet: the initial bet
     :param goal: end if goal reached
-    :return: amount won or lost
+    :return: amount won or lost, number of turns
     '''
+    turns = 0
     start = stack
     winnings = 0
     curr_bet = starting_bet
     while stack > 0 and stack > curr_bet and (winnings < goal):
         # simulate the ball landing in 1 of 38 spots
+        turns += 1
         result = random.randint(1, 38)
 
         if result > 36:
@@ -41,9 +43,9 @@ def play_martingale(stack, starting_bet, goal):
             curr_bet *= 2
 
     if stack > curr_bet:
-        return winnings
+        return winnings, turns
     else:
-        return start - stack
+        return start - stack, turns
 
 
 # gives fibonacci number of index n
@@ -58,11 +60,13 @@ def F(n):
 
 # simulate game with fibonacci approach
 def play_fibonacci(stack, starting_bet, goal):
+    turns = 0
     start = stack
     winnings = 0
     curr_index = 1
     curr_bet = F(curr_index)
     while stack > 0 and stack > curr_bet and (stack - start) < goal:
+        turns += 1
         result = random.randint(1, 38)
         if result > 36:
             stack -= curr_bet
@@ -79,17 +83,19 @@ def play_fibonacci(stack, starting_bet, goal):
         curr_bet = F(curr_index)
 
     if stack > start:
-        return stack - start
+        return stack - start, turns
     else:
-        return start - stack
+        return start - stack, turns
 
 
 # simulate game with paroli approach
 def play_paroli(stack, starting_bet, goal, num_wins):
+    turns = 0
     start = stack
     curr_bet = starting_bet
     streak = 0
-    while stack > 0 and stack >= curr_bet and (stack - start) < goal:
+    while stack > 0 and curr_bet <= stack and (stack - start) < goal:
+        turns += 1
         result = random.randint(1, 38)
         if result > 36:
             stack -= curr_bet
@@ -109,15 +115,17 @@ def play_paroli(stack, starting_bet, goal, num_wins):
             streak = 0
 
     if stack > start:
-        return stack - start
+        return stack - start, turns
     else:
-        return start - stack
+        return start - stack, turns
 
 # simulate game with alembert approach
 def play_alembert(stack, starting_bet, goal):
+    turns = 0
     start = stack
     curr_bet = starting_bet
     while stack > 0 and stack >= curr_bet and (stack - start) < goal:
+        turns += 1
         result = random.randint(1, 38)
         if result > 36:
             stack -= curr_bet
@@ -131,9 +139,9 @@ def play_alembert(stack, starting_bet, goal):
             curr_bet += starting_bet
 
     if stack > start:
-        return stack - start
+        return stack - start, turns
     else:
-        return start - stack
+        return start - stack, turns
 
 
 if __name__ == "__main__":
@@ -167,17 +175,21 @@ if __name__ == "__main__":
     net = 0
     winnings = 0
     losings = 0
+    total_turns = 0
 
     # play game by game
     for num in range(num_simulations):
         if strategy == 'martingale':
-            result = play_martingale(stack, starting_bet, goal)
+            result, game_length = play_martingale(stack, starting_bet, goal)
         elif strategy == 'fibonacci':
-            result = play_fibonacci(stack, starting_bet, goal)
+            result, game_length = play_fibonacci(stack, starting_bet, goal)
         elif strategy == 'paroli':
-            result = play_paroli(stack, starting_bet, goal, num_wins)
+            result, game_length = play_paroli(stack, starting_bet, goal, num_wins)
         elif strategy == 'alembert':
-            result = play_alembert(stack, starting_bet, goal)
+            result, game_length = play_alembert(stack, starting_bet, goal)
+
+        total_turns += game_length
+
         if result == goal:
             net += goal
             winnings += goal
@@ -187,6 +199,7 @@ if __name__ == "__main__":
             losings += result
             losses += 1
 
+    average_turns = float(total_turns) / float(num_simulations)
     print "\nRESULTS:"
     print "Number of Wins: \t{}".format(wins)
     print "Number of Losses: \t{}".format(losses)
