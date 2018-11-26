@@ -31,12 +31,12 @@ if __name__ == "__main__":
     m = multiprocessing.Process(target=exec_martingale)
     m.start()
 
-    f = multiprocessing.Process(target=exec_fibonacci)
+    '''f = multiprocessing.Process(target=exec_fibonacci)
     f.start()
 
     p = multiprocessing.Process(target=exec_paroli)
     p.start()
 
     a = multiprocessing.Process(target=exec_alembert)
-    a.start()
+    a.start()'''
 

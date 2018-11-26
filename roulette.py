@@ -43,9 +43,9 @@ def play_martingale(stack, starting_bet, goal):
             curr_bet *= 2
 
     if stack > curr_bet:
-        return winnings, turns
+        return winnings, turns, True
     else:
-        return start - stack, turns
+        return start - stack, turns, False
 
 
 # gives fibonacci number of index n
@@ -83,9 +83,9 @@ def play_fibonacci(stack, starting_bet, goal):
         curr_bet = F(curr_index)
 
     if stack > start:
-        return stack - start, turns
+        return stack - start, turns, True
     else:
-        return start - stack, turns
+        return start - stack, turns, False
 
 
 # simulate game with paroli approach
@@ -115,9 +115,9 @@ def play_paroli(stack, starting_bet, goal, num_wins):
             streak = 0
 
     if stack > start:
-        return stack - start, turns
+        return stack - start, turns, True
     else:
-        return start - stack, turns
+        return start - stack, turns, False
 
 # simulate game with alembert approach
 def play_alembert(stack, starting_bet, goal):
@@ -139,9 +139,9 @@ def play_alembert(stack, starting_bet, goal):
             curr_bet += starting_bet
 
     if stack > start:
-        return stack - start, turns
+        return stack - start, turns, True
     else:
-        return start - stack, turns
+        return start - stack, turns, False
 
 
 
@@ -182,17 +182,17 @@ if __name__ == "__main__":
     # play game by game
     for num in range(num_simulations):
         if strategy == 'martingale':
-            result, game_length = play_martingale(stack, starting_bet, goal)
+            result, game_length, decision = play_martingale(stack, starting_bet, goal)
         elif strategy == 'fibonacci':
-            result, game_length = play_fibonacci(stack, starting_bet, goal)
+            result, game_length, decision = play_fibonacci(stack, starting_bet, goal)
         elif strategy == 'paroli':
-            result, game_length = play_paroli(stack, starting_bet, goal, num_wins)
+            result, game_length, decision = play_paroli(stack, starting_bet, goal, num_wins)
         elif strategy == 'alembert':
-            result, game_length = play_alembert(stack, starting_bet, goal)
+            result, game_length, decision = play_alembert(stack, starting_bet, goal)
 
         total_turns += game_length
 
-        if result == goal:
+        if decision == True:
             net += goal
             winnings += goal
             wins += 1
@@ -202,14 +202,16 @@ if __name__ == "__main__":
             losses += 1
 
     average_turns = float(total_turns) / float(num_simulations)
+    average_winnings = net/num_simulations
+
     print "\nRESULTS:"
     print "Number of Wins: \t{}".format(wins)
     print "Number of Losses: \t{}".format(losses)
-    print "Win percentage: \t{}%".format(float(wins) / float(num_simulations) * 100)
+    print "Win percentage: \t{0:.2f}%".format(float(wins) / float(num_simulations) * 100)
     print "Profit: \t\t\t${0:.2f}".format(winnings)
     print "Losses: \t\t\t${0:.2f}".format(losings)
     print "Net winnings: \t\t${0:.2f}".format(net)
-    average_winnings = net/num_simulations
+    print "Average Winnings: \t\t${0:.2f}".format(average_winnings)
 
     if strategy == 'martingale':
         with open('martingale.csv', 'a') as f:
